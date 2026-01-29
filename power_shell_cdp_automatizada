@@ -1,0 +1,2 @@
+PS C:\Users\richb> cd "C:\RICHARD\FDL\Usme\2026\CDP_Vigencia\Enero\Quinto_Grupo"
+PS C:\RICHARD\FDL\Usme\2026\CDP_Vigencia\Enero\Quinto_Grupo> streamlit run plantilla_automatizada_cdp_ene29v1.py
