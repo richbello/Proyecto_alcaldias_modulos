@@ -1,0 +1,10 @@
+PS C:\Users\richb>  Get-Process -Name streamlit -ErrorAction SilentlyContinue | Stop-Process -Force
+PS C:\Users\richb>  streamlit cache clear
+PS C:\Users\richb>  python -m streamlit run "C:\RICHARD\FDL\Usme\2026\CRP_vigencia\Enero\Grupo5_vig\interfaz_con_ciberseguridad.py"
+
+  
+
+  You can now view your Streamlit app in your browser.
+
+  Local URL: http://localhost:8502
+  Network URL: http://192.168.100.88:8502
