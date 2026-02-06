@@ -1,6 +1,6 @@
 PS C:\Users\richb>  Get-Process -Name streamlit -ErrorAction SilentlyContinue | Stop-Process -Force
 PS C:\Users\richb>  streamlit cache clear
-PS C:\Users\richb>  python -m streamlit run "C:\RICHARD\FDL\Usme\2026\CRP_vigencia\Enero\interfaz_con_ciberseguridad"
+PS C:\Users\richb>  python -m streamlit run "C:\RICHARD\FDL\Usme\2026\CRP_vigencia\Enero\interfaz_con_ciberseguridad.py"
 
 
 
