@@ -1,0 +1,12 @@
+cd C:\RICHARD\FDL\Usme\2026\Projects\crp_usme
+.\.venv\Scripts\Activate.ps1
+streamlit run app.py
+
+
+//Variante útil (si SOLO quieres activar el entorno, sin ejecutar//
+cd C:\RICHARD\FDL\Usme\2026\Projects\crp_usme
+.\.venv\Scripts\Activate.ps1
+
+//Tip profesional (opcional, pero recomendado)
+Si algún día PowerShell te bloquea la activación del entorno virtual//
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
