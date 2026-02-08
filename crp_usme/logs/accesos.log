@@ -1,0 +1,46 @@
+2026-02-07 21:11:02,256 - Login fallido: admin
+2026-02-07 21:11:44,922 - Login exitoso: admin (role=admin)
+2026-02-07 21:12:44,837 - Procesado PDF: 120260002479983_00001d-MEMO 37.pdf records=21 issues=1
+2026-02-07 21:12:45,723 - Procesado PDF: 120260002480483_00001d-MEMO 38.pdf records=21 issues=1
+2026-02-07 21:12:46,850 - Procesado PDF: 120260002522953_00001d-MEMO 39.pdf records=29 issues=9
+2026-02-07 21:12:47,828 - Procesado PDF: 120260002526413_00001d-MEMO 40.pdf records=25 issues=9
+2026-02-07 21:12:48,299 - Plantilla guardada: C:\RICHARD\FDL\Usme\2026\Projects\crp_usme\salidas\Plantilla_CRP_20260207_211248.xlsx
+2026-02-07 21:17:12,569 - Logout: admin
+2026-02-07 21:17:40,845 - Login exitoso: auditor (role=auditor)
+2026-02-07 21:18:14,859 - Logout: auditor
+2026-02-07 21:41:34,626 - Login exitoso: admin (role=admin)
+2026-02-07 21:42:04,356 - Logout: admin
+2026-02-07 21:44:12,026 - Login fallido: auditor
+2026-02-07 21:44:46,334 - Login exitoso: usuario  (role=usuario)
+2026-02-07 21:47:56,123 - Login fallido: usuario
+2026-02-07 22:08:43,314 - Login fallido: admin
+2026-02-07 22:13:55,948 - Login fallido: admin
+2026-02-07 22:16:48,584 - Login fallido: admin
+2026-02-07 22:16:53,903 - Login fallido: usuario
+2026-02-07 22:16:57,887 - Login fallido: auditor
+2026-02-07 22:17:04,424 - Login fallido: usuario
+2026-02-07 23:25:10,449 - Login fallido: admin
+2026-02-07 23:28:04,128 - Login exitoso: admin (role=admin)
+2026-02-07 23:28:46,409 - Procesado PDF: 120260002364213_00001d-MEMO 29 F.pdf records=15 issues=1
+2026-02-07 23:28:46,848 - Procesado PDF: 120260002364383_00001d-MEMO 30 F.pdf records=16 issues=1
+2026-02-07 23:28:47,232 - Procesado PDF: 120260002364433_00001d-MEMO 31 F.pdf records=16 issues=1
+2026-02-07 23:28:47,619 - Procesado PDF: 120260002364463_00001d-MEMO 32 F.pdf records=11 issues=1
+2026-02-07 23:28:47,910 - Procesado PDF: 120260002364543_00001d-MEMO 33 F.pdf records=10 issues=1
+2026-02-07 23:28:48,093 - Plantilla guardada: C:\RICHARD\FDL\Usme\2026\Projects\crp_usme\salidas\Plantilla_CRP_20260207_232848.xlsx
+2026-02-07 23:29:07,568 - Logout: admin
+2026-02-07 23:30:23,137 - Login exitoso: usuario (role=usuario)
+2026-02-07 23:30:47,775 - Procesado PDF: 120260002364213_00001d-MEMO 29 F.pdf records=15 issues=1
+2026-02-07 23:30:48,226 - Procesado PDF: 120260002364383_00001d-MEMO 30 F.pdf records=16 issues=1
+2026-02-07 23:30:48,618 - Procesado PDF: 120260002364433_00001d-MEMO 31 F.pdf records=16 issues=1
+2026-02-07 23:30:49,008 - Procesado PDF: 120260002364463_00001d-MEMO 32 F.pdf records=11 issues=1
+2026-02-07 23:30:49,310 - Procesado PDF: 120260002364543_00001d-MEMO 33 F.pdf records=10 issues=1
+2026-02-07 23:30:49,408 - Plantilla guardada: C:\RICHARD\FDL\Usme\2026\Projects\crp_usme\salidas\Plantilla_CRP_20260207_233049.xlsx
+2026-02-07 23:30:57,933 - Logout: usuario
+2026-02-07 23:31:25,956 - Login exitoso: auditor (role=auditor)
+2026-02-07 23:36:13,089 - Login exitoso: admin (role=admin)
+2026-02-07 23:36:23,856 - Logout: admin
+2026-02-07 23:36:34,393 - Login exitoso: auditor (role=auditor)
+2026-02-07 23:36:37,899 - Logout: auditor
+2026-02-07 23:36:47,486 - Login exitoso: usuario (role=usuario)
+2026-02-07 23:41:09,664 - Logout: usuario
+2026-02-07 23:41:22,268 - Login exitoso: admin (role=admin)

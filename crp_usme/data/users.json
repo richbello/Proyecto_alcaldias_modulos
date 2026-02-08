@@ -1,0 +1,23 @@
+{
+  "admin": {
+    "role": "admin",
+    "salt": "8c7812dcd4ac7323d75669e1fbf89fea",
+    "hash": "8b9aa01e8a04d2ee96d06768f61ce18ba10cbe345a34f3afe0ef0221f5ca50f4",
+    "iters": "210000",
+    "algo": "pbkdf2_sha256"
+  },
+  "auditor": {
+    "role": "auditor",
+    "salt": "c793052e5e77c9b5a04a7fdcbbcbb23e",
+    "hash": "ede708039c3d204a32571f50b0fffb2b8f706a29fd79121afad6ef3d9f107147",
+    "iters": "210000",
+    "algo": "pbkdf2_sha256"
+  },
+  "usuario": {
+    "role": "usuario",
+    "salt": "a2f497a9a905bbd2a5119dde3385c943",
+    "hash": "7211cd465bbc41fbd666f6d12ae420122b19f3e8598950b4c4d718fd696b16e8",
+    "iters": "210000",
+    "algo": "pbkdf2_sha256"
+  }
+}
