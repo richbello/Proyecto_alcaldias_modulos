@@ -1,0 +1,2 @@
+cd "C:\RICHARD\FDL\Usme\2026\Pruebas_pagos"
+python -m streamlit run app_pagos_usme.py
