@@ -6,8 +6,8 @@ from datetime import datetime
 
 def procesar_pagos_consolidado():
     # Ruta de entrada y salida
-    ruta_entrada = r"C:\RICHARD\FDL\Usme\2026\Pruebas_pagos\consolidado_pagos_usme_2026AJUSTADOAPLANTILLA.xlsx"
-    ruta_destino = r"C:\RICHARD\FDL\Usme\2026\Pruebas_pagos\V1_PLANTILLA_PAGOS_DEEPSEEK.xlsx"
+    ruta_entrada = r"C:\RICHARD\FDL\Usme\2026\Pagos\Febrero\Extracción-grupo3_feb.xlsx"
+    ruta_destino = r"C:\RICHARD\FDL\Usme\2026\Pagos\Febrero\V1_PLANTILLA_PAGOS_DEEPSEEK.xlsx"
     
     # Obtener fecha actual en formato YYYYMMDD
     fecha_actual = datetime.now().strftime("%Y%m%d")
