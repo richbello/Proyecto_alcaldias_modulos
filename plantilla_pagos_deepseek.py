@@ -7,7 +7,7 @@ from datetime import datetime
 def procesar_pagos_consolidado():
     # Ruta de entrada y salida
     ruta_entrada = r"C:\RICHARD\FDL\Usme\2026\Pagos\Febrero\Extracción-grupo3_feb.xlsx"
-    ruta_destino = r"C:\RICHARD\FDL\Usme\2026\Pagos\Febrero\V1_PLANTILLA_PAGOS_DEEPSEEK.xlsx"
+    ruta_destino = r"C:\RICHARD\FDL\Usme\2026\Pagos\Febrero\PLANTILLA_PAGOS_GENERADAFEB.xlsx"
     
     # Obtener fecha actual en formato YYYYMMDD
     fecha_actual = datetime.now().strftime("%Y%m%d")
@@ -87,26 +87,31 @@ def procesar_pagos_consolidado():
         "1,254%": "99"
     }
     
-    # Preparar la columna "Reteica %" para mapeo
-    # Asegurar que esté en string y con formato correcto
-    if "Reteica %" in df.columns:
-        df["Reteica %"] = df["Reteica %"].astype(str)
-    else:
-        print("⚠ ADVERTENCIA: No se encontró la columna 'Reteica %' en el archivo consolidado")
-        print("   Se buscarán columnas similares...")
-        # Buscar columnas similares
-        col_reteica = None
-        for col in df.columns:
-            if 'reteica' in str(col).lower():
-                col_reteica = col
+    # Preparar columna de % Reteica para mapeo del indicador
+    # La extracción guarda el % en "Pct_Reteica" o en "Valor Reteica" (ej: "0,966" o "0,966%")
+    col_pct = None
+    for c in ['Pct_Reteica', 'Valor Reteica']:
+        if c in df.columns:
+            col_pct = c
+            break
+    if col_pct is None:
+        for c in df.columns:
+            if 'reteica' in str(c).lower():
+                col_pct = c
                 break
-        
-        if col_reteica:
-            print(f"✓ Usando columna '{col_reteica}' como fuente de porcentajes")
-            df["Reteica %"] = df[col_reteica].astype(str)
-        else:
-            print("✗ No se encontró columna de reteica")
-            df["Reteica %"] = ""
+
+    if col_pct:
+        # Normalizar: asegurar formato "0,966%" para que haga match en equivalencias
+        def normalizar_pct(val):
+            s = str(val).strip().replace('.', ',')
+            if not s.endswith('%'):
+                s = s + '%'
+            return s
+        df["Reteica %"] = df[col_pct].apply(normalizar_pct)
+        print(f"✓ Usando columna '{col_pct}' para indicador. Ejemplos: {df['Reteica %'].head(3).tolist()}")
+    else:
+        print("✗ No se encontró columna de % reteica")
+        df["Reteica %"] = ""
     
     # Mapear cada valor de "Reteica %" al indicador correspondiente
     df["Indicador_Calculado"] = df["Reteica %"].map(equivalencias)
@@ -158,11 +163,20 @@ def procesar_pagos_consolidado():
         # 1. Buscar No Identificación (columna E en filas P31)
         no_identificacion = ""
         
-        # Buscar en diferentes nombres de columnas
+        # Buscar primero por nombre exacto NIT_CC, luego por variantes
+        # IMPORTANTE: NO incluir 'documento' para evitar match con "Documento No."
         for col in df.columns:
+            col_strip = str(col).strip().upper()
             col_lower = str(col).lower()
-            # Buscar cualquier columna que pueda contener identificación
-            if any(word in col_lower for word in ['identific', 'nit', 'c.c', 'documento', 'cedula', 'id']):
+            # Prioridad 1: columna exacta NIT_CC o equivalente
+            if col_strip in ['NIT_CC', 'NIT/CC', 'NIT', 'CC']:
+                valor = row[col]
+                if pd.notna(valor):
+                    no_identificacion = str(valor).strip()
+                    print(f"✓ No Identificación encontrado en '{col}': {no_identificacion}")
+                    break
+            # Prioridad 2: columnas con nit_cc o cedula (NO 'documento', NO 'id' suelto)
+            elif any(word in col_lower for word in ['nit_cc', 'cedula', 'identificacion']):
                 valor = row[col]
                 if pd.notna(valor):
                     no_identificacion = str(valor).strip()
@@ -182,33 +196,47 @@ def procesar_pagos_consolidado():
                 print(f"✓ Valor Bruto encontrado en '{col}': {valor_bruto}")
                 break
         
-        # 3. Buscar Base imponible de retención (columna AP)
+        # 3. Base imponible de retención — columna "BASE RETEICA" (limpiar $ y espacios)
         base_retencion = 0
         for col in df.columns:
-            col_lower = str(col).lower()
-            if 'base' in col_lower and ('retencion' in col_lower or 'reteica' in col_lower):
-                base_retencion = row[col] if pd.notna(row[col]) else 0
-                print(f"✓ Base imponible de retención encontrada en '{col}': {base_retencion}")
+            if str(col).strip().upper() == 'BASE RETEICA':
+                val = row[col]
+                if pd.notna(val):
+                    # Limpiar: quitar $, espacios, puntos de miles → float
+                    limpio = re.sub(r'[^\d,]', '', str(val)).replace(',', '.')
+                    try:
+                        base_retencion = float(limpio)
+                    except:
+                        base_retencion = 0
+                print(f"✓ Base imponible: {base_retencion}")
                 break
-        
-        # 4. Buscar Importe de retención (columna AQ)
+
+        # 4. Importe de retención — columna "TOTAL DESCUENTOS" (monto retenido real en pesos)
         importe_retencion = 0
         for col in df.columns:
-            col_lower = str(col).lower()
-            if 'importe' in col_lower and ('retencion' in col_lower or 'reteica' in col_lower):
-                importe_retencion = row[col] if pd.notna(row[col]) else 0
-                print(f"✓ Importe de retención encontrado en '{col}': {importe_retencion}")
-                break
-            elif 'reteica' in col_lower and 'valor' in col_lower:
-                importe_retencion = row[col] if pd.notna(row[col]) else 0
-                print(f"✓ Importe de retención (Reteica) encontrado en '{col}': {importe_retencion}")
+            if str(col).strip().upper() == 'TOTAL DESCUENTOS':
+                val = row[col]
+                if pd.notna(val):
+                    try:
+                        importe_retencion = float(val)
+                    except:
+                        importe_retencion = 0
+                print(f"✓ Importe de retención: {importe_retencion}")
                 break
         
         # 5. Buscar RP Doc Presupuestal (para columna J en filas P40)
+        # IMPORTANTE: NO usar 'doc' suelto — evita match con "Documento No."
         rp_doc = ""
         for col in df.columns:
+            col_strip = str(col).strip().upper()
             col_lower = str(col).lower()
-            if any(word in col_lower for word in ['rp', 'doc', 'presupuestal']):
+            if col_strip in ['RP DOC', 'RP DOC PRESUPUESTAL', 'RP_DOC', 'PRESUPUESTAL']:
+                valor = row[col]
+                if pd.notna(valor):
+                    rp_doc = str(valor).strip()
+                    print(f"✓ RP Doc Presupuestal encontrado en '{col}': {rp_doc}")
+                    break
+            elif 'presupuestal' in col_lower or ('rp' in col_lower and 'doc' in col_lower):
                 valor = row[col]
                 if pd.notna(valor):
                     rp_doc = str(valor).strip()
@@ -301,6 +329,23 @@ def procesar_pagos_consolidado():
         else:
             print(f"✓ Indicador obtenido de Reteica %: {indicador_retencion}")
         
+        # ===== TEXTO COLUMNA Z: "Pago No. 7 del 01/12/2025 al 31/12/2025" =====
+        del_val, al_val, pago_no_real = "", "", ""
+        for col in df.columns:
+            col_s = str(col).strip().upper()
+            val   = row[col]
+            if col_s == "DEL" and pd.notna(val):
+                del_val = str(val).strip()
+            elif col_s == "AL" and pd.notna(val):
+                al_val = str(val).strip()
+            elif col_s == "PAGO NO." and pd.notna(val):
+                try:
+                    pago_no_real = str(int(val))
+                except:
+                    pago_no_real = str(val).strip()
+        texto_z = f"Pago No. {pago_no_real} del {del_val} al {al_val}".strip()
+        print(f"✓ Texto columna Z: '{texto_z}'")
+
         # ===== FILA C (PRIMERA FILA DEL BLOQUE) =====
         # Fila 2, 5, 8, 11... - COLUMNA E = "1001", COLUMNA C y F = fecha actual
         ws.cell(row=fila_actual, column=1, value='C')  # A: Tipo Registro P
@@ -337,7 +382,7 @@ def procesar_pagos_consolidado():
         ws.cell(row=fila_actual+1, column=9, value='WB')  # I: Indicador de IVA
         ws.cell(row=fila_actual+1, column=10, value=rp_doc)  # J: RP Doc Presupuestal ← IMPORTANTE
         ws.cell(row=fila_actual+1, column=11, value=1)  # K: Posc Doc Pres
-        ws.cell(row=fila_actual+1, column=26, value=f'10 PAGO {asignacion}')  # Z: Texto
+        ws.cell(row=fila_actual+1, column=26, value=texto_z)  # Z: Texto ← AJUSTE
         
         # ===== FILA P31 (TERCERA FILA DEL BLOQUE) =====
         # Fila 4, 7, 10, 13... - COLUMNA E = no_identificacion
@@ -349,7 +394,7 @@ def procesar_pagos_consolidado():
         ws.cell(row=fila_actual+2, column=8, value=valor_bruto)  # H: importe (número)
         ws.cell(row=fila_actual+2, column=24, value='0051')  # X: Condicion de Pago
         ws.cell(row=fila_actual+2, column=25, value=asignacion)  # Y: Asignación
-        ws.cell(row=fila_actual+2, column=26, value=f'10 PAGO {asignacion}')  # Z: Texto
+        ws.cell(row=fila_actual+2, column=26, value=texto_z)  # Z: Texto ← AJUSTE
         ws.cell(row=fila_actual+2, column=37, value=codigo_bco.zfill(3))  # AM: Código Bco
         ws.cell(row=fila_actual+2, column=38, value=no_cuenta)  # AN: No Cuenta
         ws.cell(row=fila_actual+2, column=39, value=tipo_cta)  # AO: Tipo Cta
@@ -548,3 +593,4 @@ if __name__ == "__main__":
         print("   Ambas deben tener datos reales del consolidado")
     else:
         print("✗ Error en el proceso")
+
